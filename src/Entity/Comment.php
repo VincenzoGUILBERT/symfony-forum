@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\CommentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CommentRepository::class)]
 class Comment
@@ -16,16 +17,20 @@ class Comment
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank(message: "Author is mandatory")]
     private ?User $author = null;
 
     #[ORM\ManyToOne(inversedBy: 'comments')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank(message: "Related post is mandatory")]
     private ?Post $post = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\Length(min: 2, minMessage: "Must be at least 2 characters")]
     private ?string $content = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Assert\NotBlank(message: "Date of creation is mandatory")]
     private ?\DateTimeInterface $createdAt = null;
 
     public function getId(): ?int
